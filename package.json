@@ -1,8 +1,8 @@
 {
-  "name": "assignment-3",
+  "name": "csc3916_hw3",
   "version": "1.0.0",
-  "description": "CSCI3916_HW3",
-  "main": "index.js",
+  "description": "Web API 3916 Homework 3",
+  "main": "server.js",
   "scripts": {
     "test": "mocha --timeout 10000 --exit"
   },
@@ -14,7 +14,7 @@
     "Movie"
   ],
   "author": "Patrick Gornet",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
@@ -24,16 +24,14 @@
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.4",
     "mongoose": "^5.11.18",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
-    "passport-jwt": "^4.0.0",
-    "users": "^2.0.0"
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
+    "chai": "^4.3.0",
     "chai-http": "^4.3.0",
-    "mocha": "^8.3.2"
+    "mocha": "^8.3.0"
   }
 }

@@ -1,3 +1,9 @@
+/*
+CSC3916 HW2
+File: Server.js
+Description: Web API scaffolding for Movie API
+ */
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
