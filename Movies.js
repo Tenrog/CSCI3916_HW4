@@ -26,10 +26,6 @@ var MovieSchema = new Schema({
     genre: { type: String, required: true, unique: false},
     actors: {
         type: [actor],
-        // metadata: {
-        //     ActorName: { type: String, required: true},
-        //     CharacterName: { type: String, required: true},
-        // },
         validate: [arraySize, 'Movie must have at least 3 actors.']
     },
 });

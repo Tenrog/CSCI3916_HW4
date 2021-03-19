@@ -112,7 +112,7 @@ router.route('/movies')
                     res = res.status(400);
                     return res.json(err);
                 }
-                res.json({success: true, msg: 'Successfully Deleted Movie.'})
+                res.json({success: true, msg: 'Successfully Deleted A Movie.'})
             })
         }
     )
@@ -128,7 +128,7 @@ router.route('/movies')
                     res = res.status(400);
                     return res.json(err);
                 }
-                res.json({success: true, msg: 'Successfully Changed Genre.'})
+                res.json({success: true, msg: 'Successfully Changed The Genre.'})
             })
         }
     )
@@ -152,7 +152,7 @@ router.route('/movies')
                     res = res.status(400);
                     return res.json(err);
                 }
-                res.json({success: true, msg: 'Successfully added movie.'})
+                res.json({success: true, msg: 'Successfully Added A Movie.'})
             }
         )
     })
