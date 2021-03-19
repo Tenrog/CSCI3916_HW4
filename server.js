@@ -12,7 +12,7 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-
+var Movie = require('./Movies');
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -84,7 +84,81 @@ router.post('/signin', function (req, res) {
         })
     })
 });
+router.route('/movies')
+    .get(authJwtController.isAuthenticated, function (req, res) {
+            console.log(req.body);
+            Movie.find({}, function (err, movies) {
+                if (err) {
+                    res = res.status(400);
+                    return res.json(err);
+                }
+                console.log(movies);
+                res = res.status(200);
+                if (req.get('Content-Type')) {
+                    res = res.type(req.get('Content-Type'));
+                }
+                res.json(movies);
+            })
+        }
+    )
+    .delete(authJwtController.isAuthenticated, function(req, res) {
+            console.log(req.body);
+            res = res.status(200);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            Movie.findOneAndDelete({title: req.body.title}, function (err){
+                if (err) {
+                    res = res.status(400);
+                    return res.json(err);
+                }
+                res.json({success: true, msg: 'Successfully Deleted Movie.'})
+            })
+        }
+    )
+
+    .put(authJwtController.isAuthenticated, function(req, res) {
+            console.log(req.body);
+            res = res.status(200);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            Movie.findOneAndUpdate({title: req.body.title}, {genre: req.body.genre}, function (err){
+                if (err) {
+                    res = res.status(400);
+                    return res.json(err);
+                }
+                res.json({success: true, msg: 'Successfully Changed Genre.'})
+            })
+        }
+    )
+
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        res = res.status(200);
+        if (req.get('Content-Type')) {
+            res = res.type(req.get('Content-Type'));
+        }
+
+        let movie = new Movie();
+        movie.title = req.body.title;
+        movie.year = req.body.year;
+        movie.genre = req.body.genre;
+        movie.actors = req.body.actors;
+
+
+        movie.save(function (err) {
+                if (err) {
+                    res = res.status(400);
+                    return res.json(err);
+                }
+                res.json({success: true, msg: 'Successfully added movie.'})
+            }
+        )
+    })
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
+
+
