@@ -11,7 +11,9 @@ var authController = require('./auth');
 var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
+var rp = require('request');
 var User = require('./Users');
+var Review = require('./Reviews')
 var Movie = require('./Movies');
 var app = express();
 app.use(cors());
@@ -147,6 +149,7 @@ router.route('/movies')
         movie.actors = req.body.actors;
 
 
+
         movie.save(function (err) {
                 if (err) {
                     res = res.status(400);
@@ -156,6 +159,135 @@ router.route('/movies')
             }
         )
     })
+
+router.route('/movies/:title')
+    .get(function(req, res) {
+        let reviews_param = req.query.reviews;
+        Movie.findOne({title: req.params.title}, function(err, movie){
+
+            if(err){
+                res.status(400);
+                console.log('Error in function')
+                return res.json(err);
+            }
+            console.log(movie);
+            res.status(200);
+
+            if(movie === null){
+                res.status(400);
+                return res.json("Movie with title " + req.params.title + " does not exist.");
+            }
+
+            if (req.get('Content-Type')) {
+                res.type(req.get('Content-Type'));
+            }
+
+            if (reviews_param==="true"){
+                Movie.aggregate([
+                    {
+                        $match: {  title: req.params.title }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "reviews",
+                            "localField": "title",
+                            "foreignField": "movie",
+                            "as": "Reviews"
+                        }
+                    }
+                ]).exec(function(err, results){
+                    res.json(results);
+                })
+                console.log("show reviews true");
+            }
+
+            else {
+                res.json(movie);
+            }
+        })
+    })
+
+router.route('/movies/:title/reviews')
+    .get(function (req, res) {
+        let reviews_param = req.query.reviews;
+        Movie.findOne({title: req.params.title}, function(err, movie){
+
+            if(err){
+                res.status(400);
+                console.log('Error in function')
+                return res.json(err);
+            }
+            console.log(movie);
+            res.status(200);
+
+            if(movie === null){
+                res.status(400);
+                return res.json("Movie with title " + req.params.title + " does not exist.");
+            }
+
+            if (req.get('Content-Type')) {
+                res.type(req.get('Content-Type'));
+            }
+
+            if (reviews_param==="true"){
+                Movie.aggregate([
+                    {
+                        $match: {  title: req.params.title }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "reviews",
+                            "localField": "title",
+                            "foreignField": "movie",
+                            "as": "Reviews"
+                        }
+                    }
+                ]).exec(function(err, results){
+                    res.json(results);
+                })
+                console.log("show reviews true");
+            }
+
+            else {
+                res.json(movie);
+            }
+        })
+    })
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        let reviews_param = req.query.reviews;
+        Movie.findOne({title: req.params.title}, function (err, movie) {
+
+
+            let review = new Review();
+            review.reviewer = req.body.reviewer;
+            review.movie = req.body.movie;
+            review.comment = req.body.comment;
+            review.rating = req.body.rating;
+            Movie.exists({title: review.movie}).then(movieExists => {
+                    console.log("movie exists?:")
+                    console.log(movieExists)
+                    if (movieExists) {
+
+                        review.save(function (err) {
+                            if (err) {
+                                res = res.status(400);
+                                return res.json({success: false, msg: 'Hit save error'});
+                                return res.json(err);
+                            }
+                            res.json({success: true, msg: 'Successfully added review.'});
+                        })
+                    } else {
+                        res = res.status(400);
+                        res.json({success: false, msg: "Didn't find movie with title " + review.movietitle});
+
+                    }
+                }
+            )
+        })
+    })
+
+
+
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
