@@ -114,6 +114,7 @@ router.route('/movies')
                     res = res.status(400);
                     return res.json(err);
                 }
+
                 res.json({success: true, msg: 'Successfully Deleted A Movie.'})
             })
         }
@@ -278,7 +279,7 @@ router.route('/movies/:title/reviews')
                         })
                     } else {
                         res = res.status(400);
-                        res.json({success: false, msg: "Didn't find movie with title " + review.movietitle});
+                        res.json({success: false, msg: "Didn't find movie with title " + review.movie});
 
                     }
                 }
