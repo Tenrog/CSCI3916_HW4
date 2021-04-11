@@ -24,15 +24,12 @@ var MovieSchema = new Schema({
     title: { type: String, required: true},
     year: { type: Number, required: true, unique: false},
     genre: { type: String, required: true, unique: false},
-    actors: {
-        type: [actor],
-        validate: [arraySize, 'Movie must have at least 3 actors.']
-    },
+    actors: { type: Array, required: true},
+    imageURL:{type: String}
 });
 
-function arraySize(arr) {
-    return arr.length >= 3;
-}
+
+
 
 
 module.exports = mongoose.model('Movie', MovieSchema);
